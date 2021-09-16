@@ -1,44 +1,82 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Animated, {
+  Easing,
   Extrapolate,
   interpolate,
   useAnimatedStyle,
+  withDelay ,
+  useSharedValue,
+  withRepeat,
+  withTiming,
 } from "react-native-reanimated";
 const { height, width } = Dimensions.get("window");
 
-const SIZE = width * 0.7;
+const SIZE = width * 0.1;
 
-export default function PageCom({ title, index, translateX }) {
+//timming config
+
+
+
+export default function PageCom({
+  title,
+  index,
+  translateX,
+
+}) {
+
+  const AnimatedopacityView = useSharedValue(1)
+  const scaleanimation = useSharedValue(50)
+
+  
+   
+
+
+
+
+
+  
   //Animated Style
 
   const rStyle = useAnimatedStyle(() => {
     //interpolated Animation
     const scale = interpolate(
       translateX.value,
+
+      
       [(index - 1) * width, index * width, (index + 1) * width],
-      [0, 1, 0],
+      [0, 5, 0],
       Extrapolate.CLAMP
     );
 
     const borderRadius = interpolate(
       translateX.value,
       [(index - 1) * width, index * width, (index + 1) * width],
-      [0, SIZE / 2, 0],
+      [0, 50, 0],
       Extrapolate.CLAMP
     );
-
-    const rotate = interpolate(
-      translateX.value,
-      [(index - 1) * width, index * width, (index + 1) * width],
-      [0, 1, 0]
+    const fullscale = interpolate(
+       translateX.value , 
+         [(index - 1) * width, index * width, (index + 1) * width],
+         [0 , 5 , 0] , 
+          Extrapolate.CLAMP
     );
+
+
 
     return {
       borderRadius,
-      transform: [{ scale }],
+      transform: [{ scale }]
+     
     };
   });
+
+  // : withTiming(translateX.value, {
+  //       duration: 2000 , 
+        
+     
+  //       easing:Easing.in(Easing.exp)
+  //     })
 
   const rTextstyle = useAnimatedStyle(() => {
     const translateY = interpolate(
@@ -62,12 +100,7 @@ export default function PageCom({ title, index, translateX }) {
   });
 
   return (
-    <View
-      style={[
-        styles.pagecontainer,
-        { backgroundColor: `rgba(0,0,256,0.${index + 3})` },
-      ]}
-    >
+    <View style={[styles.pagecontainer]}>
       <Animated.View style={[styles.square, rStyle]} />
       <Animated.View style={[{ position: "absolute" }, rTextstyle]}>
         <Text style={styles.txt}>{title}</Text>
@@ -82,12 +115,13 @@ const styles = StyleSheet.create({
     width: width,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "pink",
   },
   square: {
     height: SIZE,
     width: SIZE,
 
-    backgroundColor: "rgba(0, 0, 256, 0.4)",
+    backgroundColor: "hotpink",
   },
   txt: {
     fontSize: 70,
