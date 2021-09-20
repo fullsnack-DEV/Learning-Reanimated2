@@ -5,7 +5,7 @@ import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
-  withDelay ,
+  withDelay,
   useSharedValue,
   withRepeat,
   withTiming,
@@ -16,36 +16,23 @@ const SIZE = width * 0.1;
 
 //timming config
 
+export default function PageCom({ title, index, translateX }) {
+  const AnimatedopacityView = useSharedValue(1);
+  const issliding = useSharedValue();
 
+  translateX.value = withTiming(translateX.value, {
+    duration: 500,
 
-export default function PageCom({
-  title,
-  index,
-  translateX,
-
-}) {
-
-  const AnimatedopacityView = useSharedValue(1)
-  const scaleanimation = useSharedValue(50)
-
-  
-   
-
-
-
-
-
-  
-  //Animated Style
+    easing: Easing.in(Easing.exp),
+  });
 
   const rStyle = useAnimatedStyle(() => {
     //interpolated Animation
     const scale = interpolate(
       translateX.value,
 
-      
       [(index - 1) * width, index * width, (index + 1) * width],
-      [0, 5, 0],
+      [0, 6, 0],
       Extrapolate.CLAMP
     );
 
@@ -55,26 +42,22 @@ export default function PageCom({
       [0, 50, 0],
       Extrapolate.CLAMP
     );
-    const fullscale = interpolate(
-       translateX.value , 
-         [(index - 1) * width, index * width, (index + 1) * width],
-         [0 , 5 , 0] , 
-          Extrapolate.CLAMP
+    const opacity = interpolate(
+      translateX.value,
+      [(index - 1) * width, index * width, (index + 1) * width],
+      [-50, 1, -50],
+      Extrapolate.CLAMP
     );
-
-
 
     return {
       borderRadius,
-      transform: [{ scale }]
-     
+      transform: [{ scale }],
     };
   });
 
   // : withTiming(translateX.value, {
-  //       duration: 2000 , 
-        
-     
+  //       duration: 2000 ,
+
   //       easing:Easing.in(Easing.exp)
   //     })
 
@@ -115,7 +98,6 @@ const styles = StyleSheet.create({
     width: width,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "pink",
   },
   square: {
     height: SIZE,
